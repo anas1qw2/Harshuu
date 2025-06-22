@@ -1,143 +1,134 @@
+<!-- File: index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Catch the Panda 🐼💘</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flirty Quiz 💖</title>
   <style>
     body {
-      margin: 0;
-      background: linear-gradient(to right, #ffd6e8, #ffe6f2);
+      background: linear-gradient(120deg, #ffd6f5, #ffe6f0);
       font-family: 'Segoe UI', sans-serif;
-      overflow: hidden;
-    }
-    header {
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
       padding: 20px;
-      color: #c2185b;
-      font-size: 2em;
     }
-    .panda {
-      position: absolute;
-      width: 80px;
-      font-size: 60px;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-    }
-    #caught {
+    h1 {
+      color: #d63384;
       text-align: center;
-      font-size: 1.4em;
-      color: #c2185b;
-      margin-top: 20px;
     }
-    #mood {
-      text-align: center;
-      font-size: 1.2em;
-      margin-top: 10px;
-      color: #555;
-    }
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #ffe6f0;
-      padding: 30px;
+    .question-box {
+      background: #fff0f8;
       border-radius: 15px;
-      box-shadow: 0 0 20px #ff99cc;
-      z-index: 999;
+      padding: 30px 25px;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.2);
+      max-width: 500px;
+      width: 100%;
       text-align: center;
-      display: none;
+      animation: fadeIn 0.5s ease-in-out;
     }
-    .popup button {
-      margin: 10px;
-      padding: 10px 20px;
-      background-color: #ff69b4;
-      color: white;
+    .question-box h3 {
+      color: #c2185b;
+    }
+    .options button {
+      background-color: #ffb6c1;
       border: none;
       border-radius: 10px;
-      font-size: 1em;
+      color: white;
+      padding: 12px 15px;
+      margin: 6px 0;
+      width: 100%;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    .options button:hover {
+      background-color: #ff69b4;
+    }
+    input[type="text"] {
+      padding: 10px;
+      margin-top: 12px;
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid #ffb6c1;
+      box-sizing: border-box;
+    }
+    .next-btn {
+      margin-top: 15px;
+      background-color: #ffb6c1;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 10px;
       cursor: pointer;
     }
-    .popup button:hover {
-      background-color: #e75480;
+    .next-btn:hover {
+      background-color: #ff69b4;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
 <body>
-  <header>Catch the Panda if You Love Me! 🐼💕</header>
-  <main style="text-align:center">
-    <div class="panda" id="panda">🐼</div>
-    <p id="caught" style="display:none;">Yay! You caught the panda! You love meee 😚💖</p>
-    <p id="mood"></p>
-  </main>
-
-  <div class="popup" id="popup">
-    <p style="font-size:1.2em;">Wait... if you really love me… will you send me your cute photo? 🥺📸</p>
-    <button onclick="acceptPhoto()">Yes</button>
-    <button onclick="declinePhoto()">Maybe later</button>
-  </div>
-
-  <script>
-    const panda = document.getElementById('panda');
-    const caught = document.getElementById('caught');
-    const mood = document.getElementById('mood');
-    const popup = document.getElementById('popup');
-
-    let missCount = 0;
-    let isCaught = false;
-    let isFrozen = false;
-
-    function movePanda() {
-      if (isCaught || isFrozen) return;
-      panda.style.top = Math.random() * 80 + 'vh';
-      panda.style.left = Math.random() * 80 + 'vw';
+<h1>💕 Just a Cute Lil Quiz for You 💕</h1>
+<form action="https://formsubmit.co/anasshaikh1444@gmail.com" method="POST" id="quizForm">
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_next" value="catch.html">
+  <input type="hidden" name="Q1 - Kissable Part" id="answer1">
+  <input type="hidden" name="Q2 - Perfect Night" id="answer2">
+  <input type="hidden" name="Q3 - Nickname" id="answer3">
+  <input type="hidden" name="Q4 - Love Reply" id="answer4">
+  <div class="question-box" id="quizContainer"></div>
+  <button type="submit" class="hidden" id="finalSubmit">Submit</button>
+</form>
+<script>
+  const questions = [
+    { question: "1. What’s the most kissable part of your face? 😚", name: "answer1", options: ["Forehead", "Cheeks", "Nose", "Lips 😗"] },
+    { question: "2. Our perfect night together would be? 🌙", name: "answer2", options: ["Stargazing in pajamas", "Late-night cuddles & music", "Pillow fights + soft talks", "A warm bath & deep convo"] },
+    { question: "3. What nickname would you secretly love me to call you? 👀", name: "answer3", options: ["Baby panda 🐼", "Cutie commander 💘", "Harshiiiii the Hurricane 🌪", "My only chaos 💖"] },
+    { question: "4. How would you reply if I whispered 'I love you'? 💌", name: "answer4", options: ["'Say it again, softly...' 🫣", "I’ve been waiting to hear that forever 💗", "My whole soul just melted 🐣", "Bites your shoulder and runs 😛"] }
+  ];
+  let current = 0;
+  function renderQuestion(index) {
+    const q = questions[index];
+    document.getElementById("quizContainer").innerHTML = `
+      <h3>${q.question}</h3>
+      <div class="options">
+        ${q.options.map(opt => `<button type="button" onclick="selectOption('${q.name}', '${opt}')">${opt}</button>`).join('')}
+      </div>
+      <input type="text" id="customInput" placeholder="Or write your own answer...">
+      <button class="next-btn" onclick="submitAnswer('${q.name}')">Next ➡️</button>
+    `;
+  }
+  function selectOption(fieldId, value) {
+    document.getElementById(fieldId).value = value;
+    const input = document.getElementById('customInput');
+    if (input) input.value = '';
+  }
+  function submitAnswer(fieldId) {
+    const typed = document.getElementById('customInput').value.trim();
+    const hiddenField = document.getElementById(fieldId);
+    if (typed) hiddenField.value = typed;
+    if (!hiddenField.value) return alert("Pick or write something before continuing 🥹");
+    current++;
+    if (current < questions.length) renderQuestion(current);
+    else {
+      document.getElementById("quizContainer").innerHTML = `
+        <h3>💖 All done! That was fun, right? 💌</h3>
+        <button class="next-btn" onclick="document.getElementById('finalSubmit').click()">Click to finish 💘</button>
+      `;
     }
-
-    panda.onclick = () => {
-      if (isFrozen || isCaught) {
-        isCaught = true;
-        panda.textContent = '🥰';
-        caught.style.display = 'block';
-        mood.textContent = "You did it! I'm all yours 💘";
-        panda.style.cursor = 'default';
-      }
-    };
-
-    panda.onmouseover = () => {
-      if (isCaught || isFrozen) return;
-      missCount++;
-
-      if (missCount === 4) {
-        popup.style.display = 'block';
-        return;
-      }
-
-      if (missCount === 5) {
-        panda.textContent = '🥺';
-        mood.textContent = "Catch me, please 🥺";
-      } else if (missCount === 8) {
-        panda.textContent = '😔';
-        mood.textContent = "I'm losing hope... don’t you love me?";
-      } else {
-        mood.textContent = '';
-      }
-
-      movePanda();
-    };
-
-    function acceptPhoto() {
-      isFrozen = true;
-      popup.style.display = 'none';
-      mood.textContent = "I believe you now... come catch me 😚";
-    }
-
-    function declinePhoto() {
-      popup.style.display = 'none';
-      mood.textContent = "Okay... but I’m shy now 😔";
-    }
-
-    // Initial spawn
-    movePanda();
-  </script>
+  }
+  renderQuestion(current);
+</script>
 </body>
 </html>
